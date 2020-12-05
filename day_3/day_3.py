@@ -21,6 +21,7 @@ def count_trees_part_1(map):
 
     return count
 
+
 def count_trees_part_2(map):
     slopes = { (1, 1): 0, (3, 1): 0, (5, 1): 0, (7, 1): 0, (1, 2): 0 }
 
