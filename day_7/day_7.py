@@ -3,7 +3,7 @@ import re
 
 def read_file():
     result = []
-    with open('day_7/input.txt', 'r') as file:
+    with open('input.txt', 'r') as file:
         result = [line.strip().replace('contain', ',').replace('.', '').split(',') for line in file.readlines()]
 
     vertices = set()
