@@ -1,24 +1,24 @@
 import time
 
 class IntCodeProcessor:
-    def __init__(self, intcodes):
-        self.acc = 0
-        self.pointer = 0
+    def __init__(self, intcodes, pointer=0, acc=0):
+        self.pointer = pointer
+        self.acc = acc
         self.intcodes = intcodes
 
     def next_instr(self):
-        if self.pointer == len(self.intcodes):
+        if self.pointer >= len(self.intcodes):
             return True
 
         instr, value = self.intcodes[self.pointer]
+        delta = 1
 
         if instr == 'acc':
             self.acc += value
-            self.pointer += 1
         elif instr == 'jmp':
-            self.pointer += value
-        elif instr == 'nop':
-            self.pointer += 1
+            delta = value
+
+        self.pointer += delta
         return False
 
     def get_position(self):
@@ -48,26 +48,35 @@ def part_1(intcodes):
 
 
 def part_2(intcodes):
-    for i, instruction in enumerate(intcodes):
-        intcodes_modified = intcodes.copy()
-        instr, value = instruction
+    main = IntCodeProcessor(intcodes)
+    swap = {'nop': 'jmp', 'jmp': 'nop'}
+    memo = set()
+    seen = set()
+    while main.get_position() not in seen:
+        i = main.get_position()
+        instr, value = intcodes[i]
 
-        if instr == 'nop':
-            intcodes_modified[i] = ['jmp', value]
-        elif instr == 'jmp':
-            intcodes_modified[i] = ['nop', value]
-        else:
-            continue
+        original = intcodes[i]
+        if instr in swap:
+            intcodes[i] = [swap[instr], value]
 
-        processor = IntCodeProcessor(intcodes_modified)
-        
-        visited = set()
-        while processor.get_position() not in visited:
-            visited.add(processor.get_position())
-            result = processor.next_instr()
+            alt = IntCodeProcessor(intcodes, i, main.get_acc())
+            visited = set()
+            while alt.get_position() not in visited:
+                current = alt.get_position()
+                visited.add(current)
+                memo.add(current)
 
-            if result:
-                return processor.get_acc()
+                result = alt.next_instr()
+                if result:
+                    return alt.get_acc()
+                if alt.get_position() in memo:
+                    break
+
+            intcodes[i] = original
+
+        seen.add(i)
+        main.next_instr()
 
     return None
 
