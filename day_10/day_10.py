@@ -66,6 +66,26 @@ def part_2(vertices, edges, end):
     
     return count
     
+def part_2_iterative_solution(vertices, edges, end):
+    memo = { v:0 for v in vertices }
+    memo[0] = 1
+    worklist = []
+    worklist.append((None, 0))
+    while len(worklist) > 0:
+        u, v = worklist.pop(-1)
+
+        for i in range(v-3, v):
+            if i in vertices:
+                memo[v] += memo[i]
+
+        if v == end:
+            return memo[v]
+
+        if v in edges:
+            worklist.append((v, min(edges[v])))
+    
+    return None
+
 
 def main():
     vertices, edges, end = read_file()
