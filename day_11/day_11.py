@@ -31,6 +31,23 @@ def part_1(layout):
 def part_2(layout):
     state = numpy.array([])
     slopes = { (0,1), (1,1), (1,0), (1,-1), (0, -1), (-1, -1), (-1, 0), (-1, 1) }
+
+    adjacencies = {}
+    for r in range(len(layout)):
+            for c in range(len(layout[r])):
+                if layout[r][c] == '.':
+                    continue
+
+                adjacencies[(r, c)] = []
+                for rise, run in slopes:
+                    x, y = c + run, r + rise
+                    while 0 <= y < len(layout) and 0 <= x < len(layout[0]):
+                        if layout[y][x] != '.':
+                            adjacencies[(r, c)].append((x,y))
+                            break
+                        x += run
+                        y += rise
+
     while not numpy.array_equal(state, layout):
         state = numpy.copy(layout)
         for r, row in enumerate(layout):
@@ -39,19 +56,10 @@ def part_2(layout):
                     continue
 
                 occupied = 0
-                
-                for rise, run in slopes:
-                    x, y = c + run, r + rise
-                    while 0 <= y < len(state) and 0 <= x < len(state[0]):
-                        if state[y][x] == '#':
-                            occupied += 1
-                            break
-                        elif state[y][x] == 'L':
-                            break
-
-                        x += run
-                        y += rise
-                
+                for x, y in adjacencies[(r, c)]:
+                    if state[y][x] == '#':
+                        occupied += 1
+                    
                 if seat == 'L' and occupied == 0:
                     layout[r][c] = '#'
                 elif seat == '#' and occupied >= 5:
