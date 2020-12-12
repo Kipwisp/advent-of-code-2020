@@ -88,7 +88,7 @@ def main():
     print(f'Silver: {part_1(intcodes)}')
     print(f'Completed in {time.time() - ts} seconds. \n')
 
-    s = time.time()
+    ts = time.time()
     print(f'Gold: {part_2(intcodes)}')
     print(f'Completed in {time.time() - ts} seconds.')
 

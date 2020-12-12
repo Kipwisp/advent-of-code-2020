@@ -53,7 +53,7 @@ def main():
     print(f'Silver: {result}')
     print(f'Completed in {time.time() - ts} seconds. \n')
 
-    s = time.time()
+    ts = time.time()
     print(f'Gold: {part_2(data, result)}')
     print(f'Completed in {time.time() - ts} seconds.')
 

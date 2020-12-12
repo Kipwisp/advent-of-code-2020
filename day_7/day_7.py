@@ -79,7 +79,7 @@ def main():
     print(f'Silver: {count_bags_part_1(vertices, edges)}')
     print(f'Completed in {time.time() - ts} seconds. \n')
 
-    s = time.time()
+    ts = time.time()
     print(f'Gold: {count_bags_part_2(vertices, edges)}')
     print(f'Completed in {time.time() - ts} seconds.')
 
