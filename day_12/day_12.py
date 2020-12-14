@@ -32,7 +32,7 @@ def part_1(data):
     return abs(x) + abs(y)
 
 
-def part_2(data, target):
+def part_2(data):
     rotations = { 'R': -1, 'L': 1 }
     directions = {'N': (0, 1), 'S': (0, -1), 'E': (1, 0), 'W': (-1, 0) }
     ship_x, ship_y = 0, 0
@@ -58,12 +58,11 @@ def main():
     data = read_file()
 
     ts = time.time()
-    result = part_1(data)
-    print(f'Silver: {result}')
+    print(f'Silver: {part_1(data)}')
     print(f'Completed in {time.time() - ts} seconds. \n')
 
     ts = time.time()
-    print(f'Gold: {part_2(data, result)}')
+    print(f'Gold: {part_2(data)}')
     print(f'Completed in {time.time() - ts} seconds.')
 
 
