@@ -32,6 +32,22 @@ def part_1(instructions):
     return sum(registers.values())
 
 
+def part_1_bitwise(instructions):
+    mask = ''
+    bitmask = ''
+    registers = {}
+    for op, value in instructions:
+        if op == 'mask':
+            mask = re.sub('X', '0', value)
+            bitmask = re.sub('X', '1', re.sub('[01]', '0', value))
+        else:
+            slot = int(re.search('[0-9]+', op).group())
+            masked_value = (int(bitmask, 2) & int(value)) | int(mask, 2)
+            registers[slot] = masked_value
+    
+    return sum(registers.values())
+
+
 def part_2(instructions):
     mask = ''
     registers = {}
