@@ -16,7 +16,7 @@ def read_file() -> tuple:
         value_range = set()
         for r in ranges:
             lower, upper = r.split('-')
-            value_range = value_range.union(set(range(int(lower), int(upper) + 1)))
+            value_range.update(set(range(int(lower), int(upper) + 1)))
         fields[name] = value_range
 
     ticket = tuple(int(i) for i in ticket_section.split('\n')[1].split(','))
@@ -66,9 +66,7 @@ def part_2(fields: dict, ticket: tuple, nearby: list) -> int:
             if len(candidate_fields) == 1:
                 columns[i] = candidate_fields.pop()
             else:
-                for field in candidate_fields:
-                    if field in columns:
-                        candidate_fields.remove(field)
+                candidates[i] = list(filter(lambda x: x not in columns, candidate_fields))
 
     result = 1
     for i, field in enumerate(columns):
