@@ -4,43 +4,33 @@ from functools import reduce
 
 class Piece:
     def __init__(self, img, label=None):
-        self.img = img
         self.label = label
-        self.np_img = np.array(img)
+        self.img = np.array(img)
 
     def get_data(self):
-        return self.np_img
+        return self.img
 
     def get_label(self):
         return self.label
 
     def get_top(self):
-        return tuple(self.np_img[0])
+        return tuple(self.img[0])
 
     def get_bottom(self):
-        return tuple(self.np_img[-1])
+        return tuple(self.img[-1])
 
     def get_left(self):
-        return tuple(self.np_img[:, 0])
+        return tuple(self.img[:, 0])
 
     def get_right(self):
-        return tuple(self.np_img[:, -1])
+        return tuple(self.img[:, -1])
 
     def rotate(self):
-        self.np_img = np.rot90(self.np_img)
-        self.img = tuple(self.np_img)
+        self.img = np.rot90(self.img)
     
     def flip(self):
-        self.np_img = np.flip(self.np_img, 0)
-        self.img = tuple(self.np_img)
+        self.img = np.flip(self.img, 0)
     
-    def __str__(self):
-        result = ''
-        for row in self.img:
-            result += f'{str(row)}\n'
-        return result
-
-
 def read_file():
     images = []
     with open('input.txt', 'r') as file:
@@ -53,7 +43,7 @@ def read_file():
         label = label.replace('Tile ', '')
         for row in rows.split('\n'):
             data.append(tuple(row.strip()))
-        result[label] = Piece(tuple(data), label)
+        result[label] = Piece(data, label)
 
     return result
 
@@ -90,8 +80,8 @@ def part_1(data):
     tiles = [[None for i in range(size)] for j in range(size)]
     for i in range(len(tiles)):
         for j in range(len(tiles)):
-            top = set(unmatched[current]) if i-1 < 0 else set([tiles[i-1][j].get_bottom()])
-            left = set(unmatched[current]) if j-1 < 0 else set([tiles[i][j-1].get_right()])
+            top = unmatched[current] if i-1 < 0 else [tiles[i-1][j].get_bottom()]
+            left = unmatched[current] if j-1 < 0 else [tiles[i][j-1].get_right()]
     
             piece = data[current]
             
@@ -129,15 +119,14 @@ def part_1(data):
         
 
 def part_2(map):
-    dragon = np.array([[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' '],
-                       ['#',' ',' ',' ',' ','#','#',' ',' ',' ',' ','#','#',' ',' ',' ',' ','#','#','#'],
-                       [' ','#',' ',' ','#',' ',' ','#',' ',' ','#',' ',' ','#',' ',' ','#',' ',' ',' ']])
-    filter = dragon == '#'
-    expected = np.count_nonzero(dragon == '#')
-    height, width = len(dragon), len(dragon[0])
+    monster = np.array([[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' '],
+                        ['#',' ',' ',' ',' ','#','#',' ',' ',' ',' ','#','#',' ',' ',' ',' ','#','#','#'],
+                        [' ','#',' ',' ','#',' ',' ','#',' ',' ','#',' ',' ','#',' ',' ','#',' ',' ',' ']])
+    filter = monster == '#'
+    expected = np.count_nonzero(monster == '#')
+    height, width = len(monster), len(monster[0])
 
-    count = 0
-    rotations = 0
+    count, rotations = 0, 0
     while count == 0:
         if rotations == 4:
             map.flip()
